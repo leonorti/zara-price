@@ -20,60 +20,60 @@ import org.apache.commons.lang3.StringUtils;
  * @since 03/07/2023
  */
 public class ErrorDTO {
-    private String codigo;
-    private Date auditoria;
-    private String mensaje;
-    private String recurso;
+    private String code;
+    private Date audit;
+    private String message;
+    private String resource;
 
     public ErrorDTO(String mensaje) {
         super();
-        this.codigo = StringUtils.EMPTY;
-        this.auditoria = new Date();
-        this.mensaje = mensaje;
-        this.recurso = "";
+        this.code = StringUtils.EMPTY;
+        this.audit = new Date();
+        this.message = mensaje;
+        this.resource = "";
     }
 
-    public ErrorDTO(Date auditoria, String mensaje, String recurso) {
+    public ErrorDTO(Date audit, String message, String resource) {
         super();
-        this.auditoria = auditoria;
-        this.mensaje = mensaje;
-        this.recurso = recurso;
+        this.audit = audit;
+        this.message = message;
+        this.resource = resource;
     }
 
-    public ErrorDTO(String codigo, Date auditoria, String mensaje, String recurso) {
+    public ErrorDTO(String code, Date audit, String message, String resource) {
         super();
-        this.codigo = codigo;
-        this.auditoria = auditoria;
-        this.mensaje = mensaje;
-        this.recurso = recurso;
+        this.code = code;
+        this.audit = audit;
+        this.message = message;
+        this.resource = resource;
     }
 
-    public Date getAuditoria() {
-        return auditoria;
+    public Date getAudit() {
+        return audit;
     }
 
-    public String getMensaje() {
-        return mensaje;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMensaje(String mensaje) {
-        this.mensaje = mensaje;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String getRecurso() {
-        return recurso;
+    public String getResource() {
+        return resource;
     }
 
-    public String getCodigo() {
-        return codigo;
+    public String getCode() {
+        return code;
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public void setRecurso(String recurso) {
-        this.recurso = recurso;
+    public void setResource(String resource) {
+        this.resource = resource;
     }
 
 }

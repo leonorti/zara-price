@@ -8,7 +8,6 @@
 package com.inditex.zara;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
@@ -26,10 +25,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @SpringBootApplication
 @Configuration
-@EnableAutoConfiguration
 @EnableJpaRepositories(basePackages = "com.inditex.zara.domain")
 @EntityScan(basePackages = "com.inditex.zara.domain.data")
-@ComponentScan(basePackages = { "com.inditex.zara.infraestructure" })
+@ComponentScan(basePackages = { "com.inditex.zara" })
 public class PriceApplication {
 
 	/**

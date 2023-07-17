@@ -5,7 +5,7 @@
  * @version 1.0.0
  * @since 03/07/2023
  */
-package com.inditex.zara.infraestructure.exception;
+package com.inditex.zara.infrastructure.exception;
 
 /**
  * Excepcion general para el manejo de los servicios de los microservicios.
@@ -14,16 +14,16 @@ package com.inditex.zara.infraestructure.exception;
  * @version 1.0.0
  * @since 03/07/2023
  */
-public class ServicioException extends RuntimeException {
+public class ServiceException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
     protected String message = null;
 
-    public ServicioException() {
+    public ServiceException() {
         super("Excepcion general de servicios");
     }
 
-    public ServicioException(Exception e) {
+    public ServiceException(Exception e) {
         super(e.getMessage());
     }
 

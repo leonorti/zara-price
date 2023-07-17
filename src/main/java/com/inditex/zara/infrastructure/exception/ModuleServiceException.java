@@ -5,7 +5,7 @@
  * @version 1.0.0
  * @since 03/07/2023
  */
-package com.inditex.zara.infraestructure.exception;
+package com.inditex.zara.infrastructure.exception;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -28,7 +28,7 @@ import com.inditex.zara.domain.dto.ErrorDTO;
  * @since 03/07/2023
  */
 @ControllerAdvice
-public class ServicioModuloException extends ServicioException {
+public class ModuleServiceException extends ServiceException {
 
 	private static final long serialVersionUID = 1L;
 
@@ -40,7 +40,7 @@ public class ServicioModuloException extends ServicioException {
 	 * @param request WebRequest
 	 * @return ResponseEntity
 	 */
-	@ExceptionHandler({ Exception.class, ServicioException.class })
+	@ExceptionHandler({ Exception.class, ServiceException.class })
 	public ResponseEntity<?> globleExceptionHandler(Exception e, WebRequest request) {
 		StringWriter errors = new StringWriter();
 		e.printStackTrace(new PrintWriter((Writer) errors));
