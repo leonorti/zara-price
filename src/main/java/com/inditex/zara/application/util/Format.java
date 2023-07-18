@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 import org.springframework.stereotype.Component;
 
 /**
- * Clase Singleton Utilitaria para el formateo de datos.
+ * Clase Utilitaria para el formateo de datos.
  * 
  * @author Leonardo Ortiz
  * @version 1.0.0
@@ -29,12 +29,12 @@ public class Format {
      * @throws Exception
      */
     public Long getLong(Object objectLong) {
-        Long longValor = null;
+        Long longValue = null;
         if (objectLong != null) {
             objectLong = String.valueOf(objectLong).replaceAll("\"", "");
         }
-        longValor = Long.valueOf(String.valueOf(objectLong));
-        return longValor;
+        longValue = Long.valueOf(String.valueOf(objectLong));
+        return longValue;
     }
 
     /**
@@ -45,9 +45,9 @@ public class Format {
      * @throws Exception
      */
     public Float getFloat(Object objectFloat) {
-        Float floatValor = null;
-        floatValor = Float.valueOf(String.valueOf(objectFloat));
-        return floatValor;
+        Float floatValue = null;
+        floatValue = Float.valueOf(String.valueOf(objectFloat));
+        return floatValue;
     }
 
     /**
@@ -58,9 +58,9 @@ public class Format {
      * @throws Exception
      */
     public Timestamp getTimestamp(Object objectTimestamp) {
-        Timestamp timestampValor = null;
-        timestampValor = Timestamp.valueOf(String.valueOf(objectTimestamp));
-        return timestampValor;
+        Timestamp timestampValue = null;
+        timestampValue = Timestamp.valueOf(String.valueOf(objectTimestamp));
+        return timestampValue;
     }
 
 }

@@ -5,7 +5,7 @@
  * @version 1.0.0
  * @since 03/07/2023
  */
-package com.inditex.zara.infrastructure.exception;
+package com.inditex.zara.application.exception;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

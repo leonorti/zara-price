@@ -8,10 +8,9 @@
 
 package com.inditex.zara.infrastructure.adapters.web;
 
-import com.inditex.zara.application.ports.PriceQueryPort;
-import com.inditex.zara.application.repositories.JdbcPriceRepository;
+import com.inditex.zara.application.services.PriceService;
 import com.inditex.zara.domain.dto.PriceResultDTO;
-import com.inditex.zara.infrastructure.exception.ModuleServiceException;
+import com.inditex.zara.application.exception.ModuleServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +18,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Validated
 @CrossOrigin(origins = "*", maxAge = 3600)
-public class PriceController implements PriceQueryPort {
+public class PriceController {
+    private final PriceService priceService;
 
     @Autowired
-    private JdbcPriceRepository repositorioPrecio;
+    public PriceController(PriceService priceService) {
+        this.priceService = priceService;
+    }
 
     @GetMapping("/prices")
     @ResponseBody
@@ -30,14 +32,10 @@ public class PriceController implements PriceQueryPort {
             @RequestParam(required = false) String applicationDate,
             @RequestParam(required = false) Long productId,
             @RequestParam(required = false) Long brandId) {
-
-        PriceResultDTO precio = null;
-
         try {
-            precio = this.repositorioPrecio.findPrice(applicationDate, productId, brandId);
+            return priceService.findPriceByFilter(applicationDate, productId, brandId);
         } catch (Exception e) {
             throw new ModuleServiceException();
         }
-        return precio;
     }
 }

@@ -17,7 +17,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.inditex.zara.application.util.Format;
-import com.inditex.zara.application.util.singleton.Validacion;
+import com.inditex.zara.application.util.Validation;
 import com.inditex.zara.domain.dto.PriceResultDTO;
 import com.inditex.zara.domain.repositories.PriceRepository;
 
@@ -29,6 +29,9 @@ public class JdbcPriceRepository implements PriceRepository {
     Format format;
 
     @Autowired
+    Validation validation;
+
+    @Autowired
     public JdbcPriceRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
@@ -36,7 +39,7 @@ public class JdbcPriceRepository implements PriceRepository {
     @Override
     public PriceResultDTO findByFilters(String applicationDate, Long productId, Long brandId) throws Exception {
         PriceResultDTO priceResult = new PriceResultDTO();
-        List<Map<String, Object>> priceList = consultarFiltros(applicationDate, productId, brandId);
+        List<Map<String, Object>> priceList = this.findApplicationProductBrand(applicationDate, productId, brandId);
         if (!priceList.isEmpty()) {
             Map<String, Object> priceMap = priceList.get(0);
             priceResult.setProductId(format.getLong(priceMap.get("PRODUCT_ID")));
@@ -49,24 +52,24 @@ public class JdbcPriceRepository implements PriceRepository {
         return priceResult;
     }
 
-    private List<Map<String, Object>> consultarFiltros(String applicationDate, Long productId, Long brandId) throws Exception {
+    private List<Map<String, Object>> findApplicationProductBrand(String applicationDate, Long productId, Long brandId) throws Exception {
         String sql = "SELECT p.* FROM price p WHERE 1=1 ";
         String where = "";
 
         // Rango de fechas
-        if (Validacion.getInstance().isParam(applicationDate)) {
+        if (this.validation.isParam(applicationDate)) {
             where = where + " AND p.START_DATE <= PARSEDATETIME('" + applicationDate
                     + "','yyyy-MM-dd-HH.mm.ss') AND p.END_DATE >= PARSEDATETIME('" + applicationDate
                     + "','yyyy-MM-dd-HH.mm.ss') ";
         }
 
         // Id de producto
-        if (Validacion.getInstance().isParam(productId)) {
+        if (this.validation.isParam(productId)) {
             where = where + " AND p.PRODUCT_ID = " + productId;
         }
 
         // Id cadena
-        if (Validacion.getInstance().isParam(brandId)) {
+        if (this.validation.isParam(brandId)) {
             where = where + " AND p.brand_id = " + brandId;
         }
         // Ordena por mayor prioridad
@@ -86,15 +89,15 @@ public class JdbcPriceRepository implements PriceRepository {
      */
     public PriceResultDTO findPrice(String applicationDate, Long productId, Long brandId) throws Exception {
         PriceResultDTO price = new PriceResultDTO();
-        List<Map<String, Object>> precioList = this.consultarFiltros(applicationDate, productId, brandId);
-        if (!precioList.isEmpty()) {
-            Map<String, Object> precioMap = precioList.get(0);
-            price.setProductId(format.getLong(precioMap.get("PRODUCT_ID")));
-            price.setBrandId(format.getLong(precioMap.get("BRAND_ID")));
-            price.setPriceList(format.getLong(precioMap.get("PRICE_LIST")));
-            price.setStartDate(format.getTimestamp(precioMap.get("START_DATE")));
-            price.setEndDate(format.getTimestamp(precioMap.get("END_DATE")));
-            price.setPrice(format.getFloat(precioMap.get("PRICE")));
+        List<Map<String, Object>> priceList = this.findApplicationProductBrand(applicationDate, productId, brandId);
+        if (!priceList.isEmpty()) {
+            Map<String, Object> priceMap = priceList.get(0);
+            price.setProductId(format.getLong(priceMap.get("PRODUCT_ID")));
+            price.setBrandId(format.getLong(priceMap.get("BRAND_ID")));
+            price.setPriceList(format.getLong(priceMap.get("PRICE_LIST")));
+            price.setStartDate(format.getTimestamp(priceMap.get("START_DATE")));
+            price.setEndDate(format.getTimestamp(priceMap.get("END_DATE")));
+            price.setPrice(format.getFloat(priceMap.get("PRICE")));
         }
         return price;
     }
