@@ -51,6 +51,11 @@ La capa de negocio del proyecto, se compone de: 6 Test de prueba. De los cuales 
 resultados de respuesta y 1 relacionado a la conformidad del servicio. 
 
 
+-- Documentación del proyecto 
+El objetivo  de este ejemplo  es realizar una  consulta simple con la información  contenida  en el archivo JSON, por ejemplo saber el nombre del formulario  de la estación: 
+http://localhost:8080/swagger-ui.html 
+
+
 * ACCESO:
 -  Acceso al servicio. 
 El servicio REST es de tipo GET con URI base (En entorno local y puerto por defecto): 
@@ -63,9 +68,3 @@ Por ejemplo:
 
 http://localhost:8080/prices?applicationDate=2020-06-16-
 21.00.00&productId=35455&brandId=1 
-
- 
- 
--- Documentación del proyecto 
-El objetivo  de este ejemplo  es realizar una  consulta simple con la información  contenida  en el archivo JSON, por ejemplo saber el nombre del formulario  de la estación: 
-http://localhost:8080/swagger-ui.html 

@@ -52,7 +52,8 @@ public class JdbcPriceRepository implements PriceRepository {
         return priceResult;
     }
 
-    private List<Map<String, Object>> findApplicationProductBrand(String applicationDate, Long productId, Long brandId) throws Exception {
+    private List<Map<String, Object>> findApplicationProductBrand(String applicationDate, Long productId, Long brandId)
+            throws Exception {
         String sql = "SELECT p.* FROM price p WHERE 1=1 ";
         String where = "";
 

@@ -1,3 +1,12 @@
+DROP TABLE IF EXISTS brand;
+CREATE TABLE brand (BRAND_ID INT PRIMARY KEY, BRAND_NAME VARCHAR(255));
+
+DROP TABLE IF EXISTS price;
+CREATE TABLE price (PRICE_ID INT PRIMARY KEY, BRAND_ID INT NOT NULL, 
+START_DATE TIMESTAMP NOT NULL, END_DATE TIMESTAMP NOT NULL, PRICE_LIST INT NOT NULL, PRODUCT_ID INT  NOT NULL, 
+PRIORITY INT NOT NULL, PRICE FLOAT NOT NULL , CURR VARCHAR(5), FOREIGN KEY (BRAND_ID) REFERENCES brand(BRAND_ID));
+
+
 ----------------------------------------------------------------------------------
 -- Incializacion de los datos de precios
 ----------------------------------------------------------------------------------

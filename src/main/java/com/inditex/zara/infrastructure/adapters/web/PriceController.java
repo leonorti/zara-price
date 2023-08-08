@@ -9,6 +9,7 @@
 package com.inditex.zara.infrastructure.adapters.web;
 
 import com.inditex.zara.application.services.PriceService;
+import com.inditex.zara.application.services.impl.PriceServiceImpl;
 import com.inditex.zara.domain.dto.PriceResultDTO;
 import com.inditex.zara.application.exception.ModuleServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,11 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class PriceController {
-    private final PriceService priceService;
 
     @Autowired
-    public PriceController(PriceService priceService) {
+    private final PriceService priceService;
+
+    public PriceController(PriceServiceImpl priceService) {
         this.priceService = priceService;
     }
 
@@ -35,6 +37,7 @@ public class PriceController {
         try {
             return priceService.findPriceByFilter(applicationDate, productId, brandId);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ModuleServiceException();
         }
     }
