@@ -13,6 +13,8 @@ import com.inditex.zara.application.services.impl.PriceServiceImpl;
 import com.inditex.zara.domain.dto.PriceResultDTO;
 import com.inditex.zara.application.exception.ModuleServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,15 +32,20 @@ public class PriceController {
 
     @GetMapping("/prices")
     @ResponseBody
-    public PriceResultDTO findPriceByFilter(
+    public ResponseEntity<PriceResultDTO> findPriceByFilter(
             @RequestParam(required = false) String applicationDate,
             @RequestParam(required = false) Long productId,
             @RequestParam(required = false) Long brandId) {
         try {
-            return priceService.findPriceByFilter(applicationDate, productId, brandId);
+            PriceResultDTO priceResultDTO = priceService.findPriceByFilter(applicationDate, productId, brandId);
+            if (priceResultDTO != null) {
+                return new ResponseEntity<>(priceResultDTO, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(new PriceResultDTO(), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ModuleServiceException();
+            // throw new ModuleServiceException();
+            return new ResponseEntity<>(new PriceResultDTO(), HttpStatus.BAD_REQUEST);
         }
     }
 }

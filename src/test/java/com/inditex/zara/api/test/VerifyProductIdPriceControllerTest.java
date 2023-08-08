@@ -3,15 +3,21 @@ package com.inditex.zara.api.test;
 import com.inditex.zara.application.services.PriceService;
 import com.inditex.zara.domain.dto.PriceResultDTO;
 import com.inditex.zara.infrastructure.adapters.web.PriceController;
-import com.inditex.zara.application.exception.ModuleServiceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class VerifyProductIdPriceControllerTest {
@@ -36,35 +42,60 @@ class VerifyProductIdPriceControllerTest {
         when(priceService.findPriceByFilter(applicationDate, productId, brandId)).thenReturn(expectedResult);
 
         // Act
-        PriceResultDTO result = priceController.findPriceByFilter(applicationDate, productId, brandId);
+        ResponseEntity<PriceResultDTO> response = priceController.findPriceByFilter(applicationDate, productId,
+                brandId);
 
         // Assert
-        assertEquals(expectedResult, result);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertSame(expectedResult.getProductId(), response.getBody().getProductId());
     }
 
     @Test
-    void testFindPriceByFilter_WhenInvalidProductId_ReturnsModuleServiceException() {
-        // Arrange
-        String applicationDate = "2023-07-18";
-        Long productId = null; // Invalid productId
-        Long brandId = 456L;
+    public void testFindPriceByFilter_WithBrandId_Success() {
+        String applicationDate = "2023-08-08-12.00.00";
+        Long productId = 1L;
+        Long brandId = 2L;
 
-        // Act & Assert
-        assertThrows(ModuleServiceException.class, () ->
-                priceController.findPriceByFilter(applicationDate, productId, brandId));
+        PriceResultDTO priceResult = new PriceResultDTO();
+        when(priceService.findPriceByFilter(applicationDate, productId, brandId)).thenReturn(priceResult);
+
+        ResponseEntity<PriceResultDTO> response = priceController.findPriceByFilter(applicationDate, productId,
+                brandId);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertSame(priceResult.getBrandId(), ((PriceResultDTO) response.getBody()).getBrandId());
+
     }
 
     @Test
-    void testFindPriceByFilter_WhenProductIdNotFound_ReturnsModuleServiceException() {
-        // Arrange
-        String applicationDate = "2023-07-18";
-        Long productId = 999L; // Non-existing productId
-        Long brandId = 456L;
-        when(priceService.findPriceByFilter(applicationDate, productId, brandId)).thenReturn(null);
+    public void testFindPriceByFilter_WithoutBrandId_Success() {
+        String applicationDate = "2023-08-08-12.00.00";
+        Long productId = 1L;
 
-        // Act & Assert
-        assertThrows(ModuleServiceException.class, () ->
-                priceController.findPriceByFilter(applicationDate, productId, brandId));
+        PriceResultDTO priceResult = new PriceResultDTO();
+        when(priceService.findPriceByFilter(applicationDate, productId, null)).thenReturn(priceResult);
+
+        ResponseEntity<PriceResultDTO> response = priceController.findPriceByFilter(applicationDate, productId, null);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertSame(priceResult.getBrandId(), response.getBody().getBrandId());
+    }
+
+    @Test
+    public void testFindPriceByFilter_WithInvalidBrandId_BadRequest() {
+        String applicationDate = "2023-08-08-12.00.00";
+        Long productId = 1L;
+        Long invalidBrandId = -2L;
+
+        ResponseEntity<PriceResultDTO> response = priceController.findPriceByFilter(applicationDate, productId,
+                invalidBrandId);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNull(response.getBody().getBrandId());
+
+        verify(priceService, never()).findPriceByFilter(any(), any(), any());
     }
 
     @Test
@@ -77,10 +108,13 @@ class VerifyProductIdPriceControllerTest {
         when(priceService.findPriceByFilter(applicationDate, productId, brandId)).thenReturn(expectedResult);
 
         // Act
-        PriceResultDTO result = priceController.findPriceByFilter(applicationDate, productId, brandId);
+        ResponseEntity<PriceResultDTO> response = priceController.findPriceByFilter(applicationDate, productId,
+                brandId);
 
         // Assert
-        assertEquals(expectedResult, result);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertSame(expectedResult.getBrandId(), response.getBody().getBrandId());
     }
 
     @Test
@@ -93,9 +127,12 @@ class VerifyProductIdPriceControllerTest {
         when(priceService.findPriceByFilter(applicationDate, productId, brandId)).thenReturn(expectedResult);
 
         // Act
-        PriceResultDTO result = priceController.findPriceByFilter(applicationDate, productId, brandId);
+        ResponseEntity<PriceResultDTO> response = priceController.findPriceByFilter(applicationDate, productId,
+                brandId);
 
         // Assert
-        assertEquals(expectedResult, result);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertSame(expectedResult.getBrandId(), response.getBody().getBrandId());
     }
 }

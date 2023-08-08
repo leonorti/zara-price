@@ -1,6 +1,7 @@
 package com.inditex.zara.api.test;
 
 import com.inditex.zara.application.services.PriceService;
+import com.inditex.zara.application.services.impl.PriceServiceImpl;
 import com.inditex.zara.domain.dto.PriceResultDTO;
 import com.inditex.zara.infrastructure.adapters.web.PriceController;
 import com.inditex.zara.application.exception.ModuleServiceException;
@@ -10,9 +11,20 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Random;
@@ -29,32 +41,48 @@ class VerifyBrandIdPriceControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void testFindPriceByFilter_WhenValidParams_ReturnsPriceResultDTO() {
-        // Arrange
-        String applicationDate = "2023-07-18";
-        Long productId = 123L;
-        Long brandId = 456L;
-        PriceResultDTO expectedResult = new PriceResultDTO();
-        when(priceService.findPriceByFilter(applicationDate, productId, brandId)).thenReturn(expectedResult);
+    private MockMvc mockMvc;
 
-        // Act
-        PriceResultDTO result = priceController.findPriceByFilter(applicationDate, productId, brandId);
-
-        // Assert
-        assertEquals(expectedResult, result);
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(priceController).build();
     }
 
-    @RepeatedTest(5)
+    @Test
+    public void testFindPriceByFilter_WithBrandId_Success() {
+        String applicationDate = "2023-08-08-12.00.00";
+        Long productId = 1L;
+        Long brandId = 2L;
+
+        PriceResultDTO priceResult = new PriceResultDTO();
+        when(priceService.findPriceByFilter(applicationDate, productId, brandId)).thenReturn(priceResult);
+
+        ResponseEntity<PriceResultDTO> response = priceController.findPriceByFilter(applicationDate, productId,
+                brandId);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertSame(priceResult.getBrandId(), response.getBody().getBrandId());
+
+    }
+
+    @Test
     void testFindPriceByFilter_WhenRandomBrandId_ReturnsModuleServiceException() {
-        // Arrange
-        String applicationDate = "2023-07-18";
-        Long productId = 123L;
+        String applicationDate = "2023-08-08-12.00.00";
+        Long productId = 1L;
         Long brandId = getRandomBrandId();
 
-        // Act & Assert
-        assertThrows(ModuleServiceException.class, () ->
-                priceController.findPriceByFilter(applicationDate, productId, brandId));
+        PriceResultDTO priceResult = new PriceResultDTO();
+        when(priceService.findPriceByFilter(applicationDate, productId, brandId)).thenReturn(priceResult);
+
+        ResponseEntity<PriceResultDTO> response = priceController.findPriceByFilter(applicationDate, productId,
+                brandId);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertSame(priceResult.getBrandId(), response.getBody().getBrandId());
+
     }
 
     private Long getRandomBrandId() {

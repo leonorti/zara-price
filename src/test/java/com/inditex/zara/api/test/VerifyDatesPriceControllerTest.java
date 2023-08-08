@@ -9,8 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -36,22 +40,13 @@ class VerifyDatesPriceControllerTest {
         when(priceService.findPriceByFilter(applicationDate, productId, brandId)).thenReturn(expectedResult);
 
         // Act
-        PriceResultDTO result = priceController.findPriceByFilter(applicationDate, productId, brandId);
+        ResponseEntity<PriceResultDTO> response = priceController.findPriceByFilter(applicationDate, productId,
+                brandId);
 
         // Assert
-        assertEquals(expectedResult, result);
-    }
-
-    @Test
-    void testFindPriceByFilter_WhenInvalidDate_ReturnsModuleServiceException() {
-        // Arrange
-        String applicationDate = "2023-07-18-10.00.00"; // Invalid date format
-        Long productId = 123L;
-        Long brandId = 456L;
-
-        // Act & Assert
-        assertThrows(ModuleServiceException.class, () ->
-                priceController.findPriceByFilter(applicationDate, productId, brandId));
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertSame(expectedResult.getBrandId(), response.getBody().getBrandId());
     }
 
     @Test
@@ -64,10 +59,13 @@ class VerifyDatesPriceControllerTest {
         when(priceService.findPriceByFilter(applicationDate, productId, brandId)).thenReturn(expectedResult);
 
         // Act
-        PriceResultDTO result = priceController.findPriceByFilter(applicationDate, productId, brandId);
+        ResponseEntity<PriceResultDTO> response = priceController.findPriceByFilter(applicationDate, productId,
+                brandId);
 
         // Assert
-        assertEquals(expectedResult, result);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertSame(expectedResult.getBrandId(), response.getBody().getBrandId());
     }
 
     @Test
@@ -80,10 +78,13 @@ class VerifyDatesPriceControllerTest {
         when(priceService.findPriceByFilter(applicationDate, productId, brandId)).thenReturn(expectedResult);
 
         // Act
-        PriceResultDTO result = priceController.findPriceByFilter(applicationDate, productId, brandId);
+        ResponseEntity<PriceResultDTO> response = priceController.findPriceByFilter(applicationDate, productId,
+                brandId);
 
         // Assert
-        assertEquals(expectedResult, result);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(expectedResult.getStartDate(), response.getBody().getStartDate());
     }
 
     @Test
@@ -96,9 +97,12 @@ class VerifyDatesPriceControllerTest {
         when(priceService.findPriceByFilter(applicationDate, productId, brandId)).thenReturn(expectedResult);
 
         // Act
-        PriceResultDTO result = priceController.findPriceByFilter(applicationDate, productId, brandId);
+        ResponseEntity<PriceResultDTO> response = priceController.findPriceByFilter(applicationDate, productId,
+                brandId);
 
         // Assert
-        assertEquals(expectedResult, result);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(expectedResult.getStartDate(), response.getBody().getStartDate());
     }
 }

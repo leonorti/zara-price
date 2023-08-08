@@ -31,17 +31,17 @@ public class JdbcPriceRepository implements PriceRepository {
     @Autowired
     Validation validation;
 
-    @Autowired
     public JdbcPriceRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
     public PriceResultDTO findByFilters(String applicationDate, Long productId, Long brandId) throws Exception {
-        PriceResultDTO priceResult = new PriceResultDTO();
+        PriceResultDTO priceResult = null;
         List<Map<String, Object>> priceList = this.findApplicationProductBrand(applicationDate, productId, brandId);
         if (!priceList.isEmpty()) {
             Map<String, Object> priceMap = priceList.get(0);
+            priceResult = new PriceResultDTO();
             priceResult.setProductId(format.getLong(priceMap.get("PRODUCT_ID")));
             priceResult.setBrandId(format.getLong(priceMap.get("BRAND_ID")));
             priceResult.setPriceList(format.getLong(priceMap.get("PRICE_LIST")));
